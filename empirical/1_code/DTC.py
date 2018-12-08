@@ -6,9 +6,10 @@ PYTHON_VERSION = '3.6.7'
 import os, re
 import pandas as pd
 import seaborn as sns
+import graphviz
 from sklearn import datasets
 from sklearn.tree import DecisionTreeClassifier
-
+from sklearn.tree import export_graphviz
 
 ## Set working directory  
 workdir = re.sub("(?<={})[\w\W]*".format(PROJECT), "", os.getcwd())
