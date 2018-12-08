@@ -34,4 +34,7 @@ sns.pairplot(iris, hue='species')
 
 iris_extract = iris[['petal length (cm)', 'petal width (cm)']]
 
-DTC = DecisionTreeClassifier(max_depth=2).fit(iris_extract, target)
+DTC = DecisionTreeClassifier(max_depth=3).fit(iris_extract, target)
+dot_data = export_graphviz(DTC, out_file=None, feature_names=['petal length (cm)', 'petal width (cm)'], class_names=['setosa', 'versicolor', 'virginica'], filled=True, rounded=True, special_characters=True)
+graph = graphviz.Source(dot_data)
+graph.render('dtree_render', view=True)
