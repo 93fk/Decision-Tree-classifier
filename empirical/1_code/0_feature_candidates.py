@@ -2,11 +2,11 @@ NAME = '0_feature_candidates' ## Name of the notebook goes here (without the fil
 PROJECT = 'Decision Tree Classifier'
 PYTHON_VERSION = '3.6.7'
 
-## imports
+## Imports
 import os
 import pandas as pd
-import seaborn as sns
 from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
 
 ## Set working directory  
 workdir = '/home/filip/Git/'+PROJECT
@@ -23,15 +23,17 @@ if not os.path.exists(pipeline):
     for folder in ['out', 'store', 'tmp']:
         os.makedirs(os.path.join(pipeline, folder))
 
+## Code
+data = datasets.load_wine()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
 
-##--CODE--##
-data = datasets.load_iris()
-iris = pd.DataFrame(data.data, columns=data.feature_names)
-iris['species'] = data.target
+DTC = DecisionTreeClassifier().fit(df.drop('target', axis=1), df['target'])
 
-species_dict = {0:data.target_names[0], 1:data.target_names[1], 2:data.target_names[2]}
-iris['species'] = iris['species'].map(species_dict)
+best_predictors = pd.DataFrame(DTC.feature_importances_, index=df.drop('target', axis=1).columns)
+feature_names = list(best_predictors.sort_values(by=0, ascending=False).index[:2])
+feature_names.append('target')
 
-iris_pairplot = sns.pairplot(iris, hue='species')
-os.chdir(workdir+'/empirical/2_pipeline/'+NAME)
-iris_pairplot.savefig('iris_pairplot.png')
+output_df = df[feature_names]
+
+output_df.to_csv(path_or_buf=workdir+'/empirical/2_pipeline/'+NAME+'/features.csv')
