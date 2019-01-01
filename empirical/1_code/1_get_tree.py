@@ -4,9 +4,11 @@ PYTHON_VERSION = '3.6.7'
 
 ## Imports
 import os
+import re
+import pickle
 import pandas as pd
 import pydotplus
-from sklearn.trees import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import export_graphviz
 from IPython.display import Image
 
@@ -34,4 +36,14 @@ DTC = DecisionTreeClassifier(max_depth=2).fit(df.iloc[:,0:2], df.iloc[:,2])
 graph = export_graphviz(DTC)
 viz = pydotplus.graph_from_dot_data(graph)
 Image(viz.create_png())
-## TODO - create df tith vlines and hlines
+
+pattern_0 = re.compile(r'(X\[0\]) [=<>]* ([0-9.]*)')
+pattern_1 = re.compile(r'(X\[1\]) [=<>]* ([0-9.]*)')
+
+vlines = [p[1] for p in pattern_0.findall(graph)]
+hlines = [p[1] for p in pattern_1.findall(graph)]
+
+#save vlines and hlines on disk
+
+pickle.dump(vlines, open(workdir+'/empirical/2_pipeline/'+NAME+'/vlines.obj', 'wb'))
+pickle.dump(hlines, open(workdir+'/empirical/2_pipeline/'+NAME+'/hlines.obj', 'wb'))
