@@ -31,6 +31,7 @@ if not os.path.exists(pipeline):
 ## Code
 df = pd.read_csv(workdir+'/empirical/2_pipeline/0_feature_candidates/features.csv', usecols=[1,2,3])
 df.columns = ['feature_1', 'feature_2', 'target']
+dims = [(df['feature_1'].min(), df['feature_1'].max()), (df['feature_2'].min(), df['feature_2'].max())]
 
 DTC = DecisionTreeClassifier(max_depth=2).fit(df.iloc[:,0:2], df.iloc[:,2])
 graph = export_graphviz(DTC)
@@ -47,3 +48,7 @@ hlines = [p[1] for p in pattern_1.findall(graph)]
 
 pickle.dump(vlines, open(workdir+'/empirical/2_pipeline/'+NAME+'/vlines.obj', 'wb'))
 pickle.dump(hlines, open(workdir+'/empirical/2_pipeline/'+NAME+'/hlines.obj', 'wb'))
+
+pickle.dump(DTC, open(workdir+'/empirical/2_pipeline/'+NAME+'/DTC.obj', 'wb'))
+
+pickle.dump(dims, open(workdir+'/empirical/2_pipeline/'+NAME+'/dims.obj', 'wb'))
