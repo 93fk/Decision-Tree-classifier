@@ -40,5 +40,27 @@ mesh = list(zip(mesh[0].flatten(), mesh[1].flatten()))
 predicted = DTC.predict(mesh)
 predicted = predicted.reshape(100, 100)
 
-plt.imshow(predicted)
+#rescale horizontal and vertical lines to match imshow dimensions (100x100)
+def rescale(value, scale):
+    _ = []
+    low = float(min(scale))
+    high = float(max(scale))
+    try:
+        for v in value:
+            _.append(100*(float(v)-low)/(high-low))
+    except:
+        return None
+    return _
 
+#plot figure
+plt.imshow(predicted)
+for v in rescale(vlines, dims[0]):
+    plt.axvline(v, color='r', linestyle='--')
+for h in rescale(hlines, dims[1]):
+    plt.axhline(h, color='r', linestyle='--')
+#remove ticks and labels
+plt.tick_params(axis='both', bottom=False, left=False)
+plt.gca().set_yticklabels([])
+plt.gca().set_xticklabels([])
+
+plt.savefig(workdir+'/empirical/3_output/results/plot.png')

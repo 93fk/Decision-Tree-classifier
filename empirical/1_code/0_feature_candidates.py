@@ -24,7 +24,7 @@ if not os.path.exists(pipeline):
         os.makedirs(os.path.join(pipeline, folder))
 
 ## Code
-data = datasets.load_wine()
+data = datasets.load_iris()
 df = pd.DataFrame(data.data, columns=data.feature_names)
 df['target'] = data.target
 
