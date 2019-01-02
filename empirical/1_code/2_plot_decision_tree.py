@@ -6,6 +6,7 @@ PYTHON_VERSION = '3.6.7'
 import os
 import pickle
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 ## Set working directory  
@@ -34,6 +35,15 @@ dims = pickle.load(open(workdir+'/empirical/2_pipeline/1_get_tree/dims.obj', 'rb
 x_scale = np.linspace(dims[0][0], dims[0][1], 100)
 y_scale = np.linspace(dims[1][0], dims[1][1], 100)
 
+y_ticks = ['{0:.2f}'.format(y) for y in np.linspace(dims[0][0], dims[0][1], 6)]
+x_ticks = ['{0:.2f}'.format(x) for x in np.linspace(dims[1][0], dims[1][1], 6)]
+
+axis_labels =  (pd
+                .read_csv(workdir+'/empirical/2_pipeline/0_feature_candidates/features.csv', nrows=0)
+                .columns #extracting feature names
+                .tolist()
+                )[1:3]
+
 mesh = np.meshgrid(x_scale, y_scale)
 mesh = list(zip(mesh[0].flatten(), mesh[1].flatten()))
 
@@ -59,8 +69,9 @@ for v in rescale(vlines, dims[0]):
 for h in rescale(hlines, dims[1]):
     plt.axhline(h, color='r', linestyle='--')
 #remove ticks and labels
-plt.tick_params(axis='both', bottom=False, left=False)
-plt.gca().set_yticklabels([])
-plt.gca().set_xticklabels([])
+plt.xlabel(axis_labels[1])
+plt.ylabel(axis_labels[0])
+plt.yticks(ticks=[0,20,40,60,80,100], labels=y_ticks[-1::-1])
+plt.xticks(ticks=[0,20,40,60,80,100], labels=x_ticks)
 
 plt.savefig(workdir+'/empirical/3_output/results/plot.png')
