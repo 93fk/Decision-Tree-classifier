@@ -36,7 +36,9 @@ dims = [(df['feature_1'].min(), df['feature_1'].max()), (df['feature_2'].min(), 
 DTC = DecisionTreeClassifier(max_depth=2).fit(df.iloc[:,0:2], df.iloc[:,2])
 graph = export_graphviz(DTC)
 viz = pydotplus.graph_from_dot_data(graph)
-Image(viz.create_png())
+im = Image(viz.create_png())
+with open(workdir+'/empirical/3_output/results/graph.png', 'wb') as png:
+    png.write(im.data)
 
 pattern_0 = re.compile(r'(X\[0\]) [=<>]* ([0-9.]*)')
 pattern_1 = re.compile(r'(X\[1\]) [=<>]* ([0-9.]*)')
