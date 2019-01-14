@@ -1,6 +1,5 @@
 # Decision Tree Classifier
 
----
 
 This project aims to show DTC algorithm decision boundaries on simple data sets.
 
